@@ -1,4 +1,4 @@
-# Utopia Framework Locale
+# Utopia Locale
 
 Utopia framework locale library is simple and lite library for managing application translations and localization. This library is aiming to be as simple and easy to learn and use.
 
