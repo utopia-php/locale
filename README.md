@@ -6,6 +6,12 @@ Although this library is part of the [Utopia Framework](https://github.com/utopi
 
 ## Getting Started
 
+Install using composer:
+```bash
+composer require utopia-php/locale
+```
+
+Init in your application:
 ```php
 <?php
 
