@@ -21,7 +21,7 @@ use Utopia\Locale\Locale;
 
 // Init translations
 Locale::setLanguage('en-US', ['hello' => 'Hello','world' => 'World']); // Set English
-Locale::setLanguage('he-IL', ['hello' => 'שלום',]); // Set Hebrew, Any missing items will fallback to english
+Locale::setLanguage('he-IL', ['hello' => 'שלום',]); // Set Hebrew
 
 // Get translation
 
