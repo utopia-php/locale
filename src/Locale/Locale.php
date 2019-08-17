@@ -61,7 +61,7 @@ class Locale
      *
      * @param $key
      * @param null $default
-     * @return string
+     * @return mixed
      * @throws Exception
      */
     static public function getText($key, $default = null) {
