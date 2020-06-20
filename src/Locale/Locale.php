@@ -49,7 +49,7 @@ class Locale
      */
     static public function setDefault($name)
     {
-        if(!array_key_exists($name, self::$language)) {
+        if(!\array_key_exists($name, self::$language)) {
             throw new Exception('Locale not found');
         }
 
@@ -65,9 +65,9 @@ class Locale
      * @throws Exception
      */
     static public function getText($key, $default = null) {
-        $default = (is_null($default)) ? '{{' . $key . '}}' : $default;
+        $default = (\is_null($default)) ? '{{' . $key . '}}' : $default;
 
-        if(!array_key_exists($key, self::$language[self::$default])) {
+        if(!\array_key_exists($key, self::$language[self::$default])) {
             if(self::$exceptions) {
                 throw new Exception('Key named "' . $key . '" not found');
             }
