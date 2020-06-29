@@ -19,6 +19,11 @@ use PHPUnit\Framework\TestCase;
 
 class LocaleTest extends TestCase
 {
+    /**
+     * @var Locale
+     */
+    protected $locale = null;
+
     public function setUp()
     {
         Locale::$exceptions = false; // Disable exceptions
@@ -33,18 +38,20 @@ class LocaleTest extends TestCase
 
     public function testTexts()
     {
-        $this->assertEquals('Hello', Locale::getText('hello'));
-        $this->assertEquals('World', Locale::getText('world'));
+        $locale = new Locale('en-US');
 
-        Locale::setDefault('he-IL');
+        $this->assertEquals('Hello', $locale->getText('hello'));
+        $this->assertEquals('World', $locale->getText('world'));
 
-        $this->assertEquals('שלום', Locale::getText('hello'));
-        $this->assertEquals('empty', Locale::getText('world', 'empty'));
+        $locale->setDefault('he-IL');
+
+        $this->assertEquals('שלום', $locale->getText('hello'));
+        $this->assertEquals('empty', $locale->getText('world', 'empty'));
 
         Locale::$exceptions = true; // Enable exceptions
 
         try {
-            Locale::getText('world', 'empty');
+            $locale->getText('world', 'empty');
         } catch (\Throwable $exception) {
             $this->assertInstanceOf(Exception::class, $exception);
             return;

@@ -23,7 +23,7 @@ class Locale
      *
      * @var null
      */
-    static public $default = null;
+    public $default = null;
 
     /**
      * Set New Locale
@@ -32,13 +32,18 @@ class Locale
      * @param array $language
      * @return array
      */
-    static public function setLanguage($name, array $language) //TODO add support for lazy load to memory
+    static public function setLanguage(string $name, array $language) //TODO add support for lazy load to memory
     {
-        if(empty(self::$default)) {
-            self::$default = $name;
+        self::$language[$name] = $language;
+    }
+
+    public function __construct(string $default)
+    {
+        if(!\array_key_exists($default, self::$language)) {
+            throw new Exception('Locale not found');
         }
 
-        return self::$language[$name] = $language;
+        $this->default = $default;
     }
 
     /**
@@ -47,13 +52,15 @@ class Locale
      * @param $name
      * @throws Exception
      */
-    static public function setDefault($name)
+    public function setDefault(string $name): self
     {
         if(!\array_key_exists($name, self::$language)) {
             throw new Exception('Locale not found');
         }
 
-        self::$default = $name;
+        $this->default = $name;
+
+        return $this;
     }
 
     /**
@@ -64,10 +71,11 @@ class Locale
      * @return mixed
      * @throws Exception
      */
-    static public function getText($key, $default = null) {
+    public function getText(string $key, string $default = null): string
+    {
         $default = (\is_null($default)) ? '{{' . $key . '}}' : $default;
 
-        if(!\array_key_exists($key, self::$language[self::$default])) {
+        if(!\array_key_exists($key, self::$language[$this->default])) {
             if(self::$exceptions) {
                 throw new Exception('Key named "' . $key . '" not found');
             }
@@ -75,6 +83,6 @@ class Locale
             return $default;
         }
 
-        return self::$language[self::$default][$key];
+        return self::$language[$this->default][$key];
     }
 }
