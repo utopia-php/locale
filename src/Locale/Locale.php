@@ -66,12 +66,12 @@ class Locale
     /**
      * Get Text by Locale
      *
-     * @param $key
-     * @param null $default
+     * @param string $key
+     * @param mixed $default
      * @return mixed
      * @throws Exception
      */
-    public function getText(string $key, string $default = null): string
+    public function getText(string $key, $default = null): string
     {
         $default = (\is_null($default)) ? '{{' . $key . '}}' : $default;
 
