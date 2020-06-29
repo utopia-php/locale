@@ -71,7 +71,7 @@ class Locale
      * @return mixed
      * @throws Exception
      */
-    public function getText(string $key, $default = null): string
+    public function getText(string $key, $default = null)
     {
         $default = (\is_null($default)) ? '{{' . $key . '}}' : $default;
 
