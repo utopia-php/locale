@@ -1,8 +1,8 @@
 # Utopia Locale
 
 [![Build Status](https://travis-ci.org/utopia-php/locale.svg?branch=master)](https://travis-ci.org/utopia-php/locale)
+[![Discord](https://badgen.net/badge/discord/chat/green)](https://discord.gg/GSeTUeA)
 ![Total Downloads](https://img.shields.io/packagist/dt/utopia-php/locale.svg)
-[![Chat With Us](https://img.shields.io/gitter/room/utopia-php/community.svg)](https://gitter.im/utopia-php/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
 Utopia framework locale library is simple and lite library for managing application translations and localization. This library is aiming to be as simple and easy to learn and use.
 
