@@ -38,7 +38,7 @@ class Locale
 
     public function __construct(string $default)
     {
-        if(!\array_key_exists($default, self::$language)) {
+        if (!\array_key_exists($default, self::$language)) {
             throw new Exception('Locale not found');
         }
 
@@ -53,7 +53,7 @@ class Locale
      */
     public function setDefault(string $name): self
     {
-        if(!\array_key_exists($name, self::$language)) {
+        if (!\array_key_exists($name, self::$language)) {
             throw new Exception('Locale not found');
         }
 
@@ -74,8 +74,8 @@ class Locale
     {
         $default = (\is_null($default)) ? '{{' . $key . '}}' : $default;
 
-        if(!\array_key_exists($key, self::$language[$this->default])) {
-            if(self::$exceptions) {
+        if (!\array_key_exists($key, self::$language[$this->default])) {
+            if (self::$exceptions) {
                 throw new Exception('Key named "' . $key . '" not found');
             }
 
