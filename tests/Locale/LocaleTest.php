@@ -24,7 +24,7 @@ class LocaleTest extends TestCase
      */
     protected $locale = null;
 
-    public function setUp()
+    public function setUp(): void
     {
         Locale::$exceptions = false; // Disable exceptions
 
@@ -32,7 +32,7 @@ class LocaleTest extends TestCase
         Locale::setLanguage('he-IL', ['hello' => 'שלום',]); // Set Hebrew
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
     }
 

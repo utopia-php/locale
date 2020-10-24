@@ -21,18 +21,17 @@ class Locale
     /**
      * Default Locale
      *
-     * @var null
+     * @var string
      */
-    public $default = null;
+    public $default;
 
     /**
      * Set New Locale
      *
      * @param string $name
      * @param array $language
-     * @return array
      */
-    static public function setLanguage(string $name, array $language) //TODO add support for lazy load to memory
+    static public function setLanguage(string $name, array $language): void //TODO add support for lazy load to memory
     {
         self::$language[$name] = $language;
     }
