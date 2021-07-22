@@ -36,6 +36,23 @@ class Locale
         self::$language[$name] = $language;
     }
 
+    /**
+     * Set New Locale from JSON file
+     *
+     * @param string $name
+     * @param string $path
+     */
+    static public function setFromJSON(string $name, string $path): void 
+    {
+        if (!file_exists($path)) {
+            throw new Exception('JSON template not found.');
+        }
+        
+        $language = json_decode(file_get_contents($path),true);
+        self::$language[$name] = $language;
+    }
+
+
     public function __construct(string $default)
     {
         if (!\array_key_exists($default, self::$language)) {
