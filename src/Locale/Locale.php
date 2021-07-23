@@ -45,7 +45,7 @@ class Locale
     static public function setLanguageFromJSON(string $name, string $path): void 
     {
         if (!file_exists($path)) {
-            throw new Exception('Locale file not found.');
+            throw new Exception('Translation file not found.');
         }
         
         $translations = json_decode(file_get_contents($path),true);
