@@ -28,9 +28,9 @@ class LocaleTest extends TestCase
     {
         Locale::$exceptions = false; // Disable exceptions
 
-        Locale::setLanguage('en-US', ['hello' => 'Hello','world' => 'World']); // Set English
-        Locale::setLanguage('he-IL', ['hello' => 'שלום',]); // Set Hebrew
-        Locale::setFromJSON('hi-IN', realpath(__DIR__.'/../hi-IN.json')); // Set Hindi
+        Locale::setLanguageFromArray('en-US', ['hello' => 'Hello','world' => 'World']); // Set English
+        Locale::setLanguageFromArray('he-IL', ['hello' => 'שלום',]); // Set Hebrew
+        Locale::setLanguageFromJSON('hi-IN', realpath(__DIR__.'/../hi-IN.json')); // Set Hindi
     }
 
     public function tearDown(): void

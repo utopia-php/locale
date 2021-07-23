@@ -24,13 +24,38 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 use Utopia\Locale\Locale;
 
 // Init translations
-Locale::setLanguage('en-US', ['hello' => 'Hello','world' => 'World']); // Set English
-Locale::setLanguage('he-IL', ['hello' => 'שלום',]); // Set Hebrew
+Locale::setLanguageFromArray('en-US', ['hello' => 'Hello','world' => 'World']); // Set English
+Locale::setLanguageFromArray('he-IL', ['hello' => 'שלום',]); // Set Hebrew
+Locale::setLanguageFromJSON('hi-IN', 'path/to/translations.json'); // Set Hindi
 
 // Get translation
-
 echo Locale::getText('hello'); // prints "שלום"
 echo Locale::getText('world'); // prints "World"
+```
+
+## Expected Structure of Translations
+
+Each translation is a **key-value** pair. The **key** is an identifier that represents a string in your app. The value is the translation in the specified locale.
+
+When using `setLanguageFromArray($code, $translations)` for the `en-US` locale, you need to specify the translation array in the following format:
+### Translations Array 
+```php
+<?php
+    $translations = [
+        'app.landing.title' => 'Welcome to My App.',
+        'app.landing.cta' => 'Click Here!',
+    ]
+```
+
+When using `setLanguageFromJSON($code, $path)` for the `en-US` locale you need to specify a path to the translation JSON file which should be in the following format:
+
+### JSON File
+
+```json
+{
+    "app.landing.title": "Welcome to My App.",
+    "app.landing.cta": "Click Here!",
+}
 ```
 
 ## System Requirements
