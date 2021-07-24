@@ -28,8 +28,9 @@ class LocaleTest extends TestCase
     {
         Locale::$exceptions = false; // Disable exceptions
 
-        Locale::setLanguage('en-US', ['hello' => 'Hello','world' => 'World']); // Set English
-        Locale::setLanguage('he-IL', ['hello' => 'שלום',]); // Set Hebrew
+        Locale::setLanguageFromArray('en-US', ['hello' => 'Hello','world' => 'World']); // Set English
+        Locale::setLanguageFromArray('he-IL', ['hello' => 'שלום',]); // Set Hebrew
+        Locale::setLanguageFromJSON('hi-IN', realpath(__DIR__.'/../hi-IN.json')); // Set Hindi
     }
 
     public function tearDown(): void
@@ -42,6 +43,11 @@ class LocaleTest extends TestCase
 
         $this->assertEquals('Hello', $locale->getText('hello'));
         $this->assertEquals('World', $locale->getText('world'));
+
+        $locale->setDefault('hi-IN');
+
+        $this->assertEquals('Namaste', $locale->getText('hello'));
+        $this->assertEquals('Duniya', $locale->getText('world'));
 
         $locale->setDefault('he-IL');
 

@@ -26,15 +26,32 @@ class Locale
     public $default;
 
     /**
-     * Set New Locale
+     * Set New Locale from an array
      *
      * @param string $name
-     * @param array $language
+     * @param array $translations
      */
-    static public function setLanguage(string $name, array $language): void //TODO add support for lazy load to memory
+    static public function setLanguageFromArray(string $name, array $translations): void //TODO add support for lazy load to memory
     {
-        self::$language[$name] = $language;
+        self::$language[$name] = $translations;
     }
+
+    /**
+     * Set New Locale from JSON file
+     *
+     * @param string $name
+     * @param string $path
+     */
+    static public function setLanguageFromJSON(string $name, string $path): void 
+    {
+        if (!file_exists($path)) {
+            throw new Exception('Translation file not found.');
+        }
+        
+        $translations = json_decode(file_get_contents($path),true);
+        self::$language[$name] = $translations;
+    }
+
 
     public function __construct(string $default)
     {
