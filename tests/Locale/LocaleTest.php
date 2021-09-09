@@ -75,10 +75,11 @@ class LocaleTest extends TestCase
         ]));
 
         // Test exceptions
+        $locale->setDefault('he-IL');
         Locale::$exceptions = true;
 
         try {
-            $locale->getText('world', 'empty');
+            $locale->getText('world');
         } catch (\Throwable $exception) {
             $this->assertInstanceOf(Exception::class, $exception);
             return;

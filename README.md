@@ -36,16 +36,16 @@ Locale::setLanguageFromJSON('hi-IN', 'path/to/translations.json'); // Set Hindi
 $locale = new Locale('en-US'); // en-US will be set as default language
 
 // Get translation
-echo Locale::getText('hello'); // prints "Hello"
-echo Locale::getText('world'); // prints "World"
+echo $locale->getText('hello'); // prints "Hello"
+echo $locale->getText('world'); // prints "World"
 
 // Use placeholders
-echo Locale::getText('likes', [ 'likesAmount' => 12, 'commentsAmount' => 55 ]); // prints "You have 12 likes and 55 comments."
-echo Locale::getText('likes'); // prints "You have {likesAmount} likes and {commentsAmount} comments.". If you don't provide placeholder value, we don't touch it
+echo $locale->getText('likes', [ 'likesAmount' => 12, 'commentsAmount' => 55 ]); // prints "You have 12 likes and 55 comments."
+echo $locale->getText('likes'); // prints "You have {likesAmount} likes and {commentsAmount} comments.". If you don't provide placeholder value, we don't touch it
 
 // Get translation of different language
 $locale->setDefault('he-IL');
-echo Locale::getText('hello'); // prints "שלום"
+echo $locale->getText('hello'); // prints "שלום"
 ```
 
 ## Expected Structure of Translations
