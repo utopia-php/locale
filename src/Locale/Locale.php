@@ -87,9 +87,9 @@ class Locale
      * @return mixed
      * @throws Exception
      */
-    public function getText(string $key, $default = null)
+    public function getText(string $key, $placeholders = [])
     {
-        $default = (\is_null($default)) ? '{{' . $key . '}}' : $default;
+        $default = '{{' . $key . '}}';
 
         if (!\array_key_exists($key, self::$language[$this->default])) {
             if (self::$exceptions) {
@@ -99,6 +99,12 @@ class Locale
             return $default;
         }
 
-        return self::$language[$this->default][$key];
+        $translation = self::$language[$this->default][$key];
+
+        foreach ($placeholders as $placeholderKey => $placeholderValue) {
+            $translation = str_replace('{' . $placeholderKey . '}', $placeholderValue, $translation);
+        }
+
+        return $translation;
     }
 }
