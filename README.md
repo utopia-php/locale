@@ -41,7 +41,7 @@ echo $locale->getText('world'); // prints "World"
 
 // Use placeholders
 echo $locale->getText('likes', [ 'likesAmount' => 12, 'commentsAmount' => 55 ]); // prints "You have 12 likes and 55 comments."
-echo $locale->getText('likes'); // prints "You have {likesAmount} likes and {commentsAmount} comments.". If you don't provide placeholder value, we don't touch it
+echo $locale->getText('likes'); // prints "You have {likesAmount} likes and {commentsAmount} comments.". If you don't provide placeholder value, the string is returned unchanged.
 
 // Get translation of different language
 $locale->setDefault('he-IL');
