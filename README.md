@@ -24,13 +24,28 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 use Utopia\Locale\Locale;
 
 // Init translations
-Locale::setLanguageFromArray('en-US', ['hello' => 'Hello','world' => 'World']); // Set English
+Locale::setLanguageFromArray('en-US', [
+    'hello' => 'Hello',
+    'world' => 'World',
+    'likes' => 'You have {likesAmount} likes and {commentsAmount} comments.'
+]); // Set English
 Locale::setLanguageFromArray('he-IL', ['hello' => 'שלום',]); // Set Hebrew
 Locale::setLanguageFromJSON('hi-IN', 'path/to/translations.json'); // Set Hindi
 
+// Create locale instance
+$locale = new Locale('en-US'); // en-US will be set as default language
+
 // Get translation
-echo Locale::getText('hello'); // prints "שלום"
-echo Locale::getText('world'); // prints "World"
+echo $locale->getText('hello'); // prints "Hello"
+echo $locale->getText('world'); // prints "World"
+
+// Use placeholders
+echo $locale->getText('likes', [ 'likesAmount' => 12, 'commentsAmount' => 55 ]); // prints "You have 12 likes and 55 comments."
+echo $locale->getText('likes'); // prints "You have {likesAmount} likes and {commentsAmount} comments.". If you don't provide placeholder value, the string is returned unchanged.
+
+// Get translation of different language
+$locale->setDefault('he-IL');
+echo $locale->getText('hello'); // prints "שלום"
 ```
 
 ## Expected Structure of Translations
@@ -61,6 +76,20 @@ When using `setLanguageFromJSON($code, $path)` for the `en-US` locale you need t
 ## System Requirements
 
 Utopia Framework requires PHP 7.4 or later. We recommend using the latest PHP version whenever possible.
+
+## Tests
+
+To run the tests, first you need to install libraries:
+```shell
+docker run --rm --interactive --tty \
+  --volume $PWD:/app \
+  composer update --ignore-platform-reqs --optimize-autoloader --no-plugins --no-scripts --prefer-dist
+```
+
+Finally, you can run the tests:
+```shell
+docker run --rm -v $(pwd):$(pwd):rw -w $(pwd) php:7.4-cli-alpine sh -c "vendor/bin/phpunit tests/Locale/LocaleTest.php"
+```
 
 ## Authors
 
