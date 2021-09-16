@@ -28,7 +28,7 @@ class LocaleTest extends TestCase
     {
         Locale::$exceptions = false; // Disable exceptions
 
-        Locale::setLanguageFromArray('en-US', ['hello' => 'Hello','world' => 'World', 'helloPlaceholder' => 'Hello {name} {surname}!', 'numericPlaceholder' => 'We have {usersAmount} users registered.', 'multiplePlaceholders' => 'Lets repeat: {word}, {word}, {word}']); // Set English
+        Locale::setLanguageFromArray('en-US', ['hello' => 'Hello','world' => 'World', 'helloPlaceholder' => 'Hello {{name}} {{surname}}!', 'numericPlaceholder' => 'We have {{usersAmount}} users registered.', 'multiplePlaceholders' => 'Lets repeat: {{word}}, {{word}}, {{word}}']); // Set English
         Locale::setLanguageFromArray('he-IL', ['hello' => 'שלום']); // Set Hebrew
         Locale::setLanguageFromJSON('hi-IN', realpath(__DIR__.'/../hi-IN.json')); // Set Hindi
     }
@@ -61,10 +61,10 @@ class LocaleTest extends TestCase
             'name' => 'Matej',
             'surname' => 'Bačo'
         ]));
-        $this->assertEquals('Hello Matej {surname}!', $locale->getText("helloPlaceholder", [
+        $this->assertEquals('Hello Matej {{surname}}!', $locale->getText("helloPlaceholder", [
             'name' => 'Matej',
         ]));
-        $this->assertEquals('Hello {name} {surname}!', $locale->getText("helloPlaceholder"));
+        $this->assertEquals('Hello {{name}} {{surname}}!', $locale->getText("helloPlaceholder"));
 
         $this->assertEquals('We have 12 users registered.', $locale->getText("numericPlaceholder", [
             'usersAmount' => 6 + 6,

@@ -11,11 +11,13 @@ Although this library is part of the [Utopia Framework](https://github.com/utopi
 ## Getting Started
 
 Install using composer:
+
 ```bash
 composer require utopia-php/locale
 ```
 
 Init in your application:
+
 ```php
 <?php
 
@@ -27,7 +29,7 @@ use Utopia\Locale\Locale;
 Locale::setLanguageFromArray('en-US', [
     'hello' => 'Hello',
     'world' => 'World',
-    'likes' => 'You have {likesAmount} likes and {commentsAmount} comments.'
+    'likes' => 'You have {{likesAmount}} likes and {{commentsAmount}} comments.'
 ]); // Set English
 Locale::setLanguageFromArray('he-IL', ['hello' => 'שלום',]); // Set Hebrew
 Locale::setLanguageFromJSON('hi-IN', 'path/to/translations.json'); // Set Hindi
@@ -41,7 +43,7 @@ echo $locale->getText('world'); // prints "World"
 
 // Use placeholders
 echo $locale->getText('likes', [ 'likesAmount' => 12, 'commentsAmount' => 55 ]); // prints "You have 12 likes and 55 comments."
-echo $locale->getText('likes'); // prints "You have {likesAmount} likes and {commentsAmount} comments.". If you don't provide placeholder value, the string is returned unchanged.
+echo $locale->getText('likes'); // prints "You have {{likesAmount}} likes and {{commentsAmount}} comments.". If you don't provide placeholder value, the string is returned unchanged.
 
 // Get translation of different language
 $locale->setDefault('he-IL');
@@ -53,7 +55,9 @@ echo $locale->getText('hello'); // prints "שלום"
 Each translation is a **key-value** pair. The **key** is an identifier that represents a string in your app. The value is the translation in the specified locale.
 
 When using `setLanguageFromArray($code, $translations)` for the `en-US` locale, you need to specify the translation array in the following format:
-### Translations Array 
+
+### Translations Array
+
 ```php
 <?php
     $translations = [
@@ -68,8 +72,8 @@ When using `setLanguageFromJSON($code, $path)` for the `en-US` locale you need t
 
 ```json
 {
-    "app.landing.title": "Welcome to My App.",
-    "app.landing.cta": "Click Here!",
+ "app.landing.title": "Welcome to My App.",
+ "app.landing.cta": "Click Here!"
 }
 ```
 
@@ -80,6 +84,7 @@ Utopia Framework requires PHP 7.4 or later. We recommend using the latest PHP ve
 ## Tests
 
 To run the tests, first you need to install libraries:
+
 ```shell
 docker run --rm --interactive --tty \
   --volume $PWD:/app \
@@ -87,6 +92,7 @@ docker run --rm --interactive --tty \
 ```
 
 Finally, you can run the tests:
+
 ```shell
 docker run --rm -v $(pwd):$(pwd):rw -w $(pwd) php:7.4-cli-alpine sh -c "vendor/bin/phpunit tests/Locale/LocaleTest.php"
 ```
@@ -95,8 +101,8 @@ docker run --rm -v $(pwd):$(pwd):rw -w $(pwd) php:7.4-cli-alpine sh -c "vendor/b
 
 **Eldad Fux**
 
-+ [https://twitter.com/eldadfux](https://twitter.com/eldadfux)
-+ [https://github.com/eldadfux](https://github.com/eldadfux)
+- [https://twitter.com/eldadfux](https://twitter.com/eldadfux)
+- [https://github.com/eldadfux](https://github.com/eldadfux)
 
 ## Copyright and license
 
