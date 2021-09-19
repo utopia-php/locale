@@ -102,7 +102,7 @@ class Locale
         $translation = self::$language[$this->default][$key];
 
         foreach ($placeholders as $placeholderKey => $placeholderValue) {
-            $translation = str_replace('{' . $placeholderKey . '}', $placeholderValue, $translation);
+            $translation = str_replace('{{' . $placeholderKey . '}}', $placeholderValue, $translation);
         }
 
         return $translation;
