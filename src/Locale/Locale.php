@@ -28,7 +28,7 @@ class Locale
     /**
      * Get list of configured languages
      *
-     * @return array<string>
+     * @return array
      */
     static public function getLanguages(): array
     {
@@ -116,5 +116,15 @@ class Locale
         }
 
         return $translation;
+    }
+
+    /**
+     * Get list of configured transltions in specific language
+     *
+     * @return array
+     */
+    public function getTranslations(): array
+    {
+        return self::$language[$this->default];
     }
 }
