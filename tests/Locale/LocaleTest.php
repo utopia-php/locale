@@ -5,7 +5,6 @@
  *
  * @link https://github.com/utopia-php/framework
  *
- * @author Eldad Fux <eldad@appwrite.io>
  *
  * @version 1.0 RC4
  *
