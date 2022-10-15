@@ -97,13 +97,6 @@ Finally, you can run the tests:
 docker run --rm -v $(pwd):$(pwd):rw -w $(pwd) php:7.4-cli-alpine sh -c "vendor/bin/phpunit tests/Locale/LocaleTest.php"
 ```
 
-## Authors
-
-**Eldad Fux**
-
-- [https://twitter.com/eldadfux](https://twitter.com/eldadfux)
-- [https://github.com/eldadfux](https://github.com/eldadfux)
-
 ## Copyright and license
 
 The MIT License (MIT) [http://www.opensource.org/licenses/mit-license.php](http://www.opensource.org/licenses/mit-license.php)
