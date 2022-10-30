@@ -7,7 +7,7 @@ use Exception;
 class Locale
 {
     /**
-     * @var array
+     * @var array<string, array<string, string>>
      */
     protected static $language = [];
 
@@ -29,7 +29,7 @@ class Locale
      * Set New Locale from an array
      *
      * @param  string  $name
-     * @param  array  $translations
+     * @param  array<string, string>  $translations
      */
     public static function setLanguageFromArray(string $name, array $translations): void //TODO add support for lazy load to memory
     {
@@ -48,7 +48,8 @@ class Locale
             throw new Exception('Translation file not found.');
         }
 
-        $translations = json_decode(file_get_contents($path), true);
+        /** @var array<string, string> $translations */
+        $translations = json_decode(file_get_contents($path) ?: '', true);
         self::$language[$name] = $translations;
     }
 
@@ -83,12 +84,12 @@ class Locale
      * Get Text by Locale
      *
      * @param  string  $key
-     * @param  mixed  $default
+     * @param  array<string, string|int>  $placeholders
      * @return mixed
      *
      * @throws Exception
      */
-    public function getText(string $key, $placeholders = [])
+    public function getText(string $key, array $placeholders = [])
     {
         $default = '{{'.$key.'}}';
 
@@ -103,7 +104,7 @@ class Locale
         $translation = self::$language[$this->default][$key];
 
         foreach ($placeholders as $placeholderKey => $placeholderValue) {
-            $translation = str_replace('{{'.$placeholderKey.'}}', $placeholderValue, $translation);
+            $translation = str_replace('{{'.$placeholderKey.'}}', (string) $placeholderValue, $translation);
         }
 
         return $translation;

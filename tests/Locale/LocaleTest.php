@@ -31,14 +31,14 @@ class LocaleTest extends TestCase
 
         Locale::setLanguageFromArray('en-US', ['hello' => 'Hello', 'world' => 'World', 'helloPlaceholder' => 'Hello {{name}} {{surname}}!', 'numericPlaceholder' => 'We have {{usersAmount}} users registered.', 'multiplePlaceholders' => 'Lets repeat: {{word}}, {{word}}, {{word}}']); // Set English
         Locale::setLanguageFromArray('he-IL', ['hello' => 'שלום']); // Set Hebrew
-        Locale::setLanguageFromJSON('hi-IN', realpath(__DIR__.'/../hi-IN.json')); // Set Hindi
+        Locale::setLanguageFromJSON('hi-IN', realpath(__DIR__.'/../hi-IN.json') ?: ''); // Set Hindi
     }
 
     public function tearDown(): void
     {
     }
 
-    public function testTexts()
+    public function testTexts(): void
     {
         $locale = new Locale('en-US');
 
