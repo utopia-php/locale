@@ -1,0 +1,26 @@
+name: "Tests"
+
+on: 
+  pull_request:
+  workflow_dispatch:
+
+
+jobs: 
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+              with:
+                fetch-depth: 2  
+            - name: Setup PHP Action
+              uses: shivammathur/setup-php@2.25.5
+              with: 
+                php-version: '8.0'
+            - name: Install dependencies
+              run: composer install --ignore-platform-reqs
+            - name: Run Tests
+              run: |
+               vendor/bin/phpunit --configuration phpunit.xml
+               vendor/bin/psalm --show-info=true
+              
