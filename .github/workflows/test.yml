@@ -20,7 +20,5 @@ jobs:
             - name: Install dependencies
               run: composer install --ignore-platform-reqs
             - name: Run Tests
-              run: |
-               vendor/bin/phpunit --configuration phpunit.xml
-               vendor/bin/psalm --show-info=true
+              run: composer test
               
