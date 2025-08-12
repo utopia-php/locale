@@ -17,9 +17,19 @@ class LocaleTest extends TestCase
     {
         Locale::$exceptions = false; // Disable exceptions
 
+        $this->assertCount(0, Locale::getLanguages());
+
         Locale::setLanguageFromArray('en-US', ['hello' => 'Hello', 'world' => 'World', 'helloPlaceholder' => 'Hello {{name}} {{surname}}!', 'numericPlaceholder' => 'We have {{usersAmount}} users registered.', 'multiplePlaceholders' => 'Lets repeat: {{word}}, {{word}}, {{word}}']); // Set English
+
+        $this->assertCount(1, Locale::getLanguages());
+
         Locale::setLanguageFromArray('he-IL', ['hello' => 'שלום']); // Set Hebrew
+
+        $this->assertCount(2, Locale::getLanguages());
+
         Locale::setLanguageFromJSON('hi-IN', realpath(__DIR__.'/../hi-IN.json') ?: ''); // Set Hindi
+
+        $this->assertCount(3, Locale::getLanguages());
     }
 
     public function tearDown(): void
@@ -33,15 +43,23 @@ class LocaleTest extends TestCase
         $this->assertEquals('Hello', $locale->getText('hello'));
         $this->assertEquals('World', $locale->getText('world'));
 
+        $translations = $locale->getTranslations();
+        $this->assertCount(5, $translations);
+        $this->assertEquals(['hello' => 'Hello', 'world' => 'World', 'helloPlaceholder' => 'Hello {{name}} {{surname}}!', 'numericPlaceholder' => 'We have {{usersAmount}} users registered.', 'multiplePlaceholders' => 'Lets repeat: {{word}}, {{word}}, {{word}}'], $translations);
+
         $locale->setDefault('hi-IN');
 
         $this->assertEquals('Namaste', $locale->getText('hello'));
         $this->assertEquals('Duniya', $locale->getText('world'));
 
+        $this->assertCount(2, $locale->getTranslations());
+
         $locale->setDefault('he-IL');
 
         $this->assertEquals('שלום', $locale->getText('hello'));
         // $this->assertEquals('empty', $locale->getText('world', 'empty')); Has been removed in 0.5.0
+
+        $this->assertCount(1, $locale->getTranslations());
 
         // Test placeholders
         $locale->setDefault('en-US');
@@ -65,6 +83,7 @@ class LocaleTest extends TestCase
 
         // Test exceptions
         $locale->setDefault('he-IL');
+
         Locale::$exceptions = true;
 
         try {

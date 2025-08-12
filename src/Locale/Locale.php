@@ -26,6 +26,16 @@ class Locale
     public $default;
 
     /**
+     * Get list of configured languages
+     *
+     * @return array<string>
+     */
+    public static function getLanguages(): array
+    {
+        return \array_keys(self::$language);
+    }
+
+    /**
      * Set New Locale from an array
      *
      * @param  string  $name
@@ -108,5 +118,15 @@ class Locale
         }
 
         return $translation;
+    }
+
+    /**
+     * Get list of configured transltions in specific language
+     *
+     * @return array<string, string>
+     */
+    public function getTranslations(): array
+    {
+        return self::$language[$this->default];
     }
 }
