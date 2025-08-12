@@ -123,17 +123,17 @@ class Locale
      *
      * @param  string  $key
      * @param  array<string, string|int>  $placeholders
-     * @param  string|null $default
+     * @param  string|null  $default
      * @return mixed
      *
      * @throws Exception
      */
-    public function getText(string $key, array $placeholders = [], string|null $default = self::DEFAULT_DYNAMIC_KEY)
+    public function getText(string $key, string|null $default = self::DEFAULT_DYNAMIC_KEY, array $placeholders = [])
     {
         $defaultExists = \array_key_exists($key, self::$language[$this->default]);
         $fallbackExists = \array_key_exists($key, self::$language[$this->fallback ?? ''] ?? []);
 
-        $translation = $default === self::DEFAULT_DYNAMIC_KEY ? '{{' . $key . '}}' : $default;
+        $translation = $default === self::DEFAULT_DYNAMIC_KEY ? '{{'.$key.'}}' : $default;
 
         if ($fallbackExists) {
             $translation = self::$language[$this->fallback ?? ''][$key];
@@ -145,6 +145,10 @@ class Locale
 
         if (! $defaultExists && ! $fallbackExists && self::$exceptions) {
             throw new Exception('Key named "'.$key.'" not found');
+        }
+
+        if (\is_null($translation)) {
+            return null;
         }
 
         foreach ($placeholders as $placeholderKey => $placeholderValue) {

@@ -65,20 +65,20 @@ class LocaleTest extends TestCase
         // Test placeholders
         $locale->setDefault('en-US');
 
-        $this->assertEquals('Hello Matej Bačo!', $locale->getText('helloPlaceholder', [
+        $this->assertEquals('Hello Matej Bačo!', $locale->getText('helloPlaceholder', placeholders: [
             'name' => 'Matej',
             'surname' => 'Bačo',
         ]));
-        $this->assertEquals('Hello Matej {{surname}}!', $locale->getText('helloPlaceholder', [
+        $this->assertEquals('Hello Matej {{surname}}!', $locale->getText('helloPlaceholder', placeholders: [
             'name' => 'Matej',
         ]));
         $this->assertEquals('Hello {{name}} {{surname}}!', $locale->getText('helloPlaceholder'));
 
-        $this->assertEquals('We have 12 users registered.', $locale->getText('numericPlaceholder', [
+        $this->assertEquals('We have 12 users registered.', $locale->getText('numericPlaceholder', placeholders: [
             'usersAmount' => 6 + 6,
         ]));
 
-        $this->assertEquals('Lets repeat: Appwrite, Appwrite, Appwrite', $locale->getText('multiplePlaceholders', [
+        $this->assertEquals('Lets repeat: Appwrite, Appwrite, Appwrite', $locale->getText('multiplePlaceholders', placeholders: [
             'word' => 'Appwrite',
         ]));
 
@@ -119,5 +119,16 @@ class LocaleTest extends TestCase
         } catch (Exception $e) {
             $this->assertInstanceOf(Exception::class, $e);
         }
+    }
+
+    public function testGetTextDefault(): void
+    {
+        $locale = new Locale('en-US');
+
+        $this->assertEquals('Hello', $locale->getText('hello'));
+        $this->assertEquals('{{missing}}', $locale->getText('missing'));
+        $this->assertEquals('A custom text', $locale->getText('missing', default: 'A custom text'));
+        $this->assertEquals(null, $locale->getText('missing', default: null));
+        $this->assertEquals('Sorry Matej, missing text', $locale->getText('missing', placeholders: ['name' => 'Matej'], default: 'Sorry {{name}}, missing text'));
     }
 }
