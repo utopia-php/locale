@@ -29,9 +29,9 @@ class Locale
      * Fallback locale. Used when specific or default locale is missing translation.
      * Should always be set to locale that includes all translations.
      *
-     * @var string
+     * @var string|null
      */
-    public $fallback;
+    public $fallback = null;
 
     /**
      * Set New Locale from an array
