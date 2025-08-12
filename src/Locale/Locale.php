@@ -6,7 +6,7 @@ use Exception;
 
 class Locale
 {
-    const string DEFAULT_DYNAMIC_KEY = '[[defaultDynamciKey]]'; // Replaced at runime by $key wrapped in {{ and }}
+    const string DEFAULT_DYNAMIC_KEY = '[[defaultDynamicKey]]'; // Replaced at runime by $key wrapped in {{ and }}
 
     /**
      * @var array<string, array<string, string>>
