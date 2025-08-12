@@ -6,6 +6,8 @@ use Exception;
 
 class Locale
 {
+    const string DEFAULT_DYNAMIC_KEY = '[[defaultDynamciKey]]'; // Replaced at runime by $key wrapped in {{ and }}
+
     /**
      * @var array<string, array<string, string>>
      */
@@ -121,16 +123,17 @@ class Locale
      *
      * @param  string  $key
      * @param  array<string, string|int>  $placeholders
+     * @param  string|null $default
      * @return mixed
      *
      * @throws Exception
      */
-    public function getText(string $key, array $placeholders = [])
+    public function getText(string $key, array $placeholders = [], string|null $default = self::DEFAULT_DYNAMIC_KEY)
     {
         $defaultExists = \array_key_exists($key, self::$language[$this->default]);
         $fallbackExists = \array_key_exists($key, self::$language[$this->fallback ?? ''] ?? []);
 
-        $translation = '{{'.$key.'}}';
+        $translation = $default === self::DEFAULT_DYNAMIC_KEY ? '{{' . $key . '}}' : $default;
 
         if ($fallbackExists) {
             $translation = self::$language[$this->fallback ?? ''][$key];
