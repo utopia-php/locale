@@ -84,10 +84,20 @@ class LocaleTest extends TestCase
 
         $this->assertEquals('שלום', $locale->getText('hello'));
         $this->assertEquals('{{world}}', $locale->getText('world'));
+        $this->assertEquals('{{missing}}', $locale->getText('missing'));
 
         $locale->setFallback('en-US');
 
         $this->assertEquals('שלום', $locale->getText('hello'));
         $this->assertEquals('World', $locale->getText('world'));
+        $this->assertEquals('{{missing}}', $locale->getText('missing'));
+
+        Locale::$exceptions = true;
+        try {
+            $locale->getText('missing');
+            $this->fail('Failed to throw exception when translation is missing');
+        } catch (Exception $e) {
+            $this->assertInstanceOf(Exception::class, $e);
+        }
     }
 }

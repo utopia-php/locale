@@ -117,17 +117,22 @@ class Locale
      */
     public function getText(string $key, array $placeholders = [])
     {
-        $default = (self::$language[$this->fallback ?? ''] ?? [])[$key] ?? '{{'.$key.'}}';
+        $defaultExists = \array_key_exists($key, self::$language[$this->default]);
+        $fallbackExists = \array_key_exists($key, self::$language[$this->fallback ?? ''] ?? []);
 
-        if (! \array_key_exists($key, self::$language[$this->default])) {
-            if (self::$exceptions) {
-                throw new Exception('Key named "'.$key.'" not found');
-            }
+        $translation = '{{'.$key.'}}';
 
-            return $default;
+        if ($fallbackExists) {
+            $translation = self::$language[$this->fallback ?? ''][$key];
         }
 
-        $translation = self::$language[$this->default][$key];
+        if ($defaultExists) {
+            $translation = self::$language[$this->default][$key];
+        }
+
+        if (! $defaultExists && ! $fallbackExists && self::$exceptions) {
+            throw new Exception('Key named "'.$key.'" not found');
+        }
 
         foreach ($placeholders as $placeholderKey => $placeholderValue) {
             $translation = str_replace('{{'.$placeholderKey.'}}', (string) $placeholderValue, $translation);
