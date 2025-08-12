@@ -20,7 +20,7 @@ class LocaleTest extends TestCase
         $this->assertCount(0, Locale::getLanguages());
 
         Locale::setLanguageFromArray('en-US', ['hello' => 'Hello', 'world' => 'World', 'helloPlaceholder' => 'Hello {{name}} {{surname}}!', 'numericPlaceholder' => 'We have {{usersAmount}} users registered.', 'multiplePlaceholders' => 'Lets repeat: {{word}}, {{word}}, {{word}}']); // Set English
-        
+
         $this->assertCount(1, Locale::getLanguages());
 
         Locale::setLanguageFromArray('he-IL', ['hello' => 'שלום']); // Set Hebrew
@@ -45,7 +45,7 @@ class LocaleTest extends TestCase
 
         $translations = $locale->getTranslations();
         $this->assertCount(5, $translations);
-        $this->assertEquals(['hello' => 'Hello','world' => 'World', 'helloPlaceholder' => 'Hello {{name}} {{surname}}!', 'numericPlaceholder' => 'We have {{usersAmount}} users registered.', 'multiplePlaceholders' => 'Lets repeat: {{word}}, {{word}}, {{word}}'], $translations);
+        $this->assertEquals(['hello' => 'Hello', 'world' => 'World', 'helloPlaceholder' => 'Hello {{name}} {{surname}}!', 'numericPlaceholder' => 'We have {{usersAmount}} users registered.', 'multiplePlaceholders' => 'Lets repeat: {{word}}, {{word}}, {{word}}'], $translations);
 
         $locale->setDefault('hi-IN');
 

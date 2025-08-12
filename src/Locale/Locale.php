@@ -28,9 +28,9 @@ class Locale
     /**
      * Get list of configured languages
      *
-     * @return array
+     * @return array<string>
      */
-    static public function getLanguages(): array
+    public static function getLanguages(): array
     {
         return \array_keys(self::$language);
     }
@@ -123,7 +123,7 @@ class Locale
     /**
      * Get list of configured transltions in specific language
      *
-     * @return array
+     * @return array<string, string>
      */
     public function getTranslations(): array
     {
