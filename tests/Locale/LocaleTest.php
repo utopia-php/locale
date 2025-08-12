@@ -77,4 +77,17 @@ class LocaleTest extends TestCase
 
         $this->fail('No exception was thrown');
     }
+
+    public function testFallback(): void
+    {
+        $locale = new Locale('he-IL');
+
+        $this->assertEquals('שלום', $locale->getText('hello'));
+        $this->assertEquals('{{world}}', $locale->getText('world'));
+
+        $locale->setFallback('en-US');
+
+        $this->assertEquals('שלום', $locale->getText('hello'));
+        $this->assertEquals('World', $locale->getText('world'));
+    }
 }

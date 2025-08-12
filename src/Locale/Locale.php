@@ -26,6 +26,14 @@ class Locale
     public $default;
 
     /**
+     * Fallback locale. Used when specific or default locale is missing translation.
+     * Should always be set to locale that includes all translations.
+     *
+     * @var string
+     */
+    public $fallback;
+
+    /**
      * Set New Locale from an array
      *
      * @param  string  $name
@@ -44,7 +52,7 @@ class Locale
      */
     public static function setLanguageFromJSON(string $name, string $path): void
     {
-        if (! file_exists($path)) {
+        if (! file_exists($path) && self::$exceptions) {
             throw new Exception('Translation file not found.');
         }
 
@@ -55,11 +63,29 @@ class Locale
 
     public function __construct(string $default)
     {
-        if (! \array_key_exists($default, self::$language)) {
+        if (! \array_key_exists($default, self::$language) && self::$exceptions) {
             throw new Exception('Locale not found');
         }
 
         $this->default = $default;
+    }
+
+    /**
+     * Change fallback Locale
+     *
+     * @param $name
+     *
+     * @throws Exception
+     */
+    public function setFallback(string $name): self
+    {
+        if (! \array_key_exists($name, self::$language) && self::$exceptions) {
+            throw new Exception('Locale not found');
+        }
+
+        $this->fallback = $name;
+
+        return $this;
     }
 
     /**
@@ -71,7 +97,7 @@ class Locale
      */
     public function setDefault(string $name): self
     {
-        if (! \array_key_exists($name, self::$language)) {
+        if (! \array_key_exists($name, self::$language) && self::$exceptions) {
             throw new Exception('Locale not found');
         }
 
@@ -91,7 +117,7 @@ class Locale
      */
     public function getText(string $key, array $placeholders = [])
     {
-        $default = '{{'.$key.'}}';
+        $default = (self::$language[$this->fallback ?? ''] ?? [])[$key] ?? '{{'.$key.'}}';
 
         if (! \array_key_exists($key, self::$language[$this->default])) {
             if (self::$exceptions) {
