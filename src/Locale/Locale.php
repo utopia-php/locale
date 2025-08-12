@@ -33,7 +33,7 @@ class Locale
      */
     public $fallback = null;
 
-     /**
+    /**
      * Get list of configured languages
      *
      * @return array<string>

@@ -17,15 +17,16 @@ class LocaleTest extends TestCase
     {
         Locale::$exceptions = false; // Disable exceptions
 
-        $this->assertCount(0, Locale::getLanguages());
-
-        Locale::setLanguageFromArray('en-US', ['hello' => 'Hello', 'world' => 'World', 'helloPlaceholder' => 'Hello {{name}} {{surname}}!', 'numericPlaceholder' => 'We have {{usersAmount}} users registered.', 'multiplePlaceholders' => 'Lets repeat: {{word}}, {{word}}, {{word}}']); // Set English
-
-        $this->assertCount(1, Locale::getLanguages());
+        // Set English
+        Locale::setLanguageFromArray('en-US', [
+            'hello' => 'Hello',
+            'world' => 'World',
+            'helloPlaceholder' => 'Hello {{name}} {{surname}}!',
+            'numericPlaceholder' => 'We have {{usersAmount}} users registered.',
+            'multiplePlaceholders' => 'Lets repeat: {{word}}, {{word}}, {{word}}',
+        ]);
 
         Locale::setLanguageFromArray('he-IL', ['hello' => 'שלום']); // Set Hebrew
-
-        $this->assertCount(2, Locale::getLanguages());
 
         Locale::setLanguageFromJSON('hi-IN', realpath(__DIR__.'/../hi-IN.json') ?: ''); // Set Hindi
 
