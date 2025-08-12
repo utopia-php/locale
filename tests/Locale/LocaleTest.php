@@ -17,15 +17,16 @@ class LocaleTest extends TestCase
     {
         Locale::$exceptions = false; // Disable exceptions
 
-        $this->assertCount(0, Locale::getLanguages());
-
-        Locale::setLanguageFromArray('en-US', ['hello' => 'Hello', 'world' => 'World', 'helloPlaceholder' => 'Hello {{name}} {{surname}}!', 'numericPlaceholder' => 'We have {{usersAmount}} users registered.', 'multiplePlaceholders' => 'Lets repeat: {{word}}, {{word}}, {{word}}']); // Set English
-
-        $this->assertCount(1, Locale::getLanguages());
+        // Set English
+        Locale::setLanguageFromArray('en-US', [
+            'hello' => 'Hello',
+            'world' => 'World',
+            'helloPlaceholder' => 'Hello {{name}} {{surname}}!',
+            'numericPlaceholder' => 'We have {{usersAmount}} users registered.',
+            'multiplePlaceholders' => 'Lets repeat: {{word}}, {{word}}, {{word}}',
+        ]);
 
         Locale::setLanguageFromArray('he-IL', ['hello' => 'שלום']); // Set Hebrew
-
-        $this->assertCount(2, Locale::getLanguages());
 
         Locale::setLanguageFromJSON('hi-IN', realpath(__DIR__.'/../hi-IN.json') ?: ''); // Set Hindi
 
@@ -95,5 +96,28 @@ class LocaleTest extends TestCase
         }
 
         $this->fail('No exception was thrown');
+    }
+
+    public function testFallback(): void
+    {
+        $locale = new Locale('he-IL');
+
+        $this->assertEquals('שלום', $locale->getText('hello'));
+        $this->assertEquals('{{world}}', $locale->getText('world'));
+        $this->assertEquals('{{missing}}', $locale->getText('missing'));
+
+        $locale->setFallback('en-US');
+
+        $this->assertEquals('שלום', $locale->getText('hello'));
+        $this->assertEquals('World', $locale->getText('world'));
+        $this->assertEquals('{{missing}}', $locale->getText('missing'));
+
+        Locale::$exceptions = true;
+        try {
+            $locale->getText('missing');
+            $this->fail('Failed to throw exception when translation is missing');
+        } catch (Exception $e) {
+            $this->assertInstanceOf(Exception::class, $e);
+        }
     }
 }
