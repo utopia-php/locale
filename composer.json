@@ -11,6 +11,9 @@
     "require": {
         "php": ">=7.4"
     },
+    "suggest": {
+        "ext-intl": "Required to format plural translations"
+    },
     "require-dev": {
         "phpunit/phpunit": "^9.3",
         "vimeo/psalm": "4.0.1",

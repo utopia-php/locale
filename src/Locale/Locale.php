@@ -14,6 +14,13 @@ class Locale
     protected static $language = [];
 
     /**
+     * Locale whose plural rules apply to each language
+     *
+     * @var array<string, string>
+     */
+    protected static $rules = [];
+
+    /**
      * Throw Exceptions?
      *
      * @var bool
@@ -50,10 +57,12 @@ class Locale
      *
      * @param  string  $name
      * @param  array<string, string>  $translations
+     * @param  string|null  $rules  Locale whose plural rules apply, defaults to $name
      */
-    public static function setLanguageFromArray(string $name, array $translations): void //TODO add support for lazy load to memory
+    public static function setLanguageFromArray(string $name, array $translations, ?string $rules = null): void //TODO add support for lazy load to memory
     {
         self::$language[$name] = $translations;
+        self::$rules[$name] = $rules ?? $name;
     }
 
     /**
@@ -61,8 +70,9 @@ class Locale
      *
      * @param  string  $name
      * @param  string  $path
+     * @param  string|null  $rules  Locale whose plural rules apply, defaults to $name
      */
-    public static function setLanguageFromJSON(string $name, string $path): void
+    public static function setLanguageFromJSON(string $name, string $path, ?string $rules = null): void
     {
         if (! file_exists($path) && self::$exceptions) {
             throw new Exception('Translation file not found.');
@@ -71,6 +81,7 @@ class Locale
         /** @var array<string, string> $translations */
         $translations = json_decode(file_get_contents($path) ?: '', true);
         self::$language[$name] = $translations;
+        self::$rules[$name] = $rules ?? $name;
     }
 
     public function __construct(string $default)
@@ -121,26 +132,32 @@ class Locale
     /**
      * Get Text by Locale
      *
+     * Plural placeholders are formatted in the same language as the translation they fill.
+     *
      * @param  string  $key
      * @param  array<string, string|int>  $placeholders
+     * @param  array<string, array{string, int}>  $plurals  Placeholder name => [plural key, count]
      * @param  string|null  $default
      * @return mixed
      *
      * @throws Exception
      */
-    public function getText(string $key, string|null $default = self::DEFAULT_DYNAMIC_KEY, array $placeholders = [])
+    public function getText(string $key, string|null $default = self::DEFAULT_DYNAMIC_KEY, array $placeholders = [], array $plurals = [])
     {
         $defaultExists = \array_key_exists($key, self::$language[$this->default]);
         $fallbackExists = \array_key_exists($key, self::$language[$this->fallback ?? ''] ?? []);
 
         $translation = $default === self::DEFAULT_DYNAMIC_KEY ? '{{'.$key.'}}' : $default;
+        $language = $this->default;
 
         if ($fallbackExists) {
             $translation = self::$language[$this->fallback ?? ''][$key];
+            $language = $this->fallback ?? '';
         }
 
         if ($defaultExists) {
             $translation = self::$language[$this->default][$key];
+            $language = $this->default;
         }
 
         if (! $defaultExists && ! $fallbackExists && self::$exceptions) {
@@ -151,11 +168,60 @@ class Locale
             return null;
         }
 
+        foreach ($plurals as $placeholderKey => [$pluralKey, $count]) {
+            $placeholders[$placeholderKey] = $this->format($language, $pluralKey, $count) ?? '{{'.$pluralKey.'}}';
+        }
+
         foreach ($placeholders as $placeholderKey => $placeholderValue) {
             $translation = str_replace('{{'.$placeholderKey.'}}', (string) $placeholderValue, $translation);
         }
 
         return $translation;
+    }
+
+    /**
+     * Get plural text by Locale
+     *
+     * The translation is an ICU MessageFormat pattern with a `count` argument, for example
+     * `{count, plural, one {# minute} other {# minutes}}`.
+     *
+     * @throws Exception
+     */
+    public function getPlural(string $key, int $count, string|null $default = self::DEFAULT_DYNAMIC_KEY): ?string
+    {
+        return $this->format($this->default, $key, $count) ?? ($default === self::DEFAULT_DYNAMIC_KEY ? '{{'.$key.'}}' : $default);
+    }
+
+    /**
+     * Format a plural translation with the rules of the language that has it, trying the fallback language next
+     *
+     * @throws Exception
+     */
+    protected function format(string $language, string $key, int $count): ?string
+    {
+        foreach (\array_unique(\array_filter([$language, $this->fallback])) as $name) {
+            $pattern = self::$language[$name][$key] ?? null;
+
+            if (! \is_string($pattern)) {
+                continue;
+            }
+
+            try {
+                $text = (new \MessageFormatter(self::$rules[$name] ?? $name, $pattern))->format(['count' => $count]);
+            } catch (\IntlException) {
+                continue;
+            }
+
+            if (\is_string($text)) {
+                return $text;
+            }
+        }
+
+        if (self::$exceptions) {
+            throw new Exception('Key named "'.$key.'" not found');
+        }
+
+        return null;
     }
 
     /**

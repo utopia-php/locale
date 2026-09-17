@@ -50,6 +50,38 @@ $locale->setDefault('he-IL');
 echo $locale->getText('hello'); // prints "שלום"
 ```
 
+### Plurals
+
+Plural translations are [ICU MessageFormat](https://unicode-org.github.io/icu/userguide/format_parse/messages/) patterns with a `count` argument, formatted with the [CLDR plural rules](https://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html) of the language that has the translation. They require the `intl` extension.
+
+```php
+<?php
+
+Locale::setLanguageFromArray('en-US', [
+    'minutes' => '{count, plural, one {in # minute} other {in # minutes}}',
+    'expire' => 'This code will expire {{expire}}.',
+]);
+Locale::setLanguageFromArray('ru-RU', [
+    'minutes' => '{count, plural, one {через # минуту} few {через # минуты} many {через # минут} other {через # минуты}}',
+]);
+
+$locale = new Locale('ru-RU');
+$locale->setFallback('en-US');
+
+echo $locale->getPlural('minutes', 5); // prints "через 5 минут"
+
+// Plural placeholders use the language of the translation they fill, here the en-US fallback
+echo $locale->getText('expire', plurals: ['expire' => ['minutes', 21]]); // prints "This code will expire in 21 minutes."
+```
+
+When a language loads another language's translations, pass the locale whose plural rules apply:
+
+```php
+<?php
+
+Locale::setLanguageFromJSON('sr-RS', 'path/to/en.json', 'en');
+```
+
 ## Expected Structure of Translations
 
 Each translation is a **key-value** pair. The **key** is an identifier that represents a string in your app. The value is the translation in the specified locale.
