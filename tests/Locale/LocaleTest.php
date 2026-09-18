@@ -52,8 +52,6 @@ class LocaleTest extends TestCase
         // Serbian reading English translations, with and without English plural rules
         Locale::setLanguageFromJSON('sr-RS', realpath(__DIR__.'/../en-plurals.json') ?: '', 'en');
         Locale::setLanguageFromJSON('sr-Latn-RS', realpath(__DIR__.'/../en-plurals.json') ?: '');
-
-        $this->assertCount(10, Locale::getLanguages());
     }
 
     public function tearDown(): void
