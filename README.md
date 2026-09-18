@@ -52,7 +52,7 @@ echo $locale->getText('hello'); // prints "שלום"
 
 ### Plurals
 
-Plural translations are [ICU MessageFormat](https://unicode-org.github.io/icu/userguide/format_parse/messages/) patterns with a `count` argument, formatted with the [CLDR plural rules](https://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html) of the language that has the translation. They require the `intl` extension.
+Plural translations are [ICU MessageFormat](https://unicode-org.github.io/icu/userguide/format_parse/messages/) patterns with a `count` argument, formatted with the [CLDR plural rules](https://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html) of the language that has the translation. Inside a pattern, `{` and `}` are ICU syntax, so keep `{{placeholders}}` in the sentence around it and pass any other value as an ICU argument instead.
 
 ```php
 <?php
@@ -60,6 +60,7 @@ Plural translations are [ICU MessageFormat](https://unicode-org.github.io/icu/us
 Locale::setLanguageFromArray('en-US', [
     'minutes' => '{count, plural, one {in # minute} other {in # minutes}}',
     'expire' => 'This code will expire {{expire}}.',
+    'invites' => '{count, plural, one {# invite left for {team}} other {# invites left for {team}}}',
 ]);
 Locale::setLanguageFromArray('ru-RU', [
     'minutes' => '{count, plural, one {через # минуту} few {через # минуты} many {через # минут} other {через # минуты}}',
@@ -72,7 +73,12 @@ echo $locale->getPlural('minutes', 5); // prints "через 5 минут"
 
 // Plural placeholders use the language of the translation they fill, here the en-US fallback
 echo $locale->getText('expire', plurals: ['expire' => ['minutes', 21]]); // prints "This code will expire in 21 minutes."
+
+// Patterns can take other ICU arguments
+echo $locale->getPlural('invites', 2, arguments: ['team' => 'Appwrite']); // prints "2 invites left for Appwrite"
 ```
+
+A language that has no translation for the plural key, or whose pattern does not compile, falls back to the fallback language and its rules. `selectordinal` and the other ICU types work the same way.
 
 When a language loads another language's translations, pass the locale whose plural rules apply:
 
@@ -111,7 +117,7 @@ When using `setLanguageFromJSON($code, $path)` for the `en-US` locale you need t
 
 ## System Requirements
 
-Utopia Framework requires PHP 7.4 or later. We recommend using the latest PHP version whenever possible.
+Utopia Framework requires PHP 8.3 or later and the `intl` extension. We recommend using the latest PHP version whenever possible.
 
 ## Tests
 
@@ -126,7 +132,8 @@ docker run --rm --interactive --tty \
 Finally, you can run the tests:
 
 ```shell
-docker run --rm -v $(pwd):$(pwd):rw -w $(pwd) php:7.4-cli-alpine sh -c "vendor/bin/phpunit tests/Locale/LocaleTest.php"
+docker run --rm --interactive --volume $PWD:/app composer sh -c \
+  "install-php-extensions intl && composer test"
 ```
 
 ## Copyright and license

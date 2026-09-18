@@ -135,9 +135,9 @@ class Locale
      * Plural placeholders are formatted in the same language as the translation they fill.
      *
      * @param  string  $key
-     * @param  array<string, string|int>  $placeholders
-     * @param  array<string, array{string, int}>  $plurals  Placeholder name => [plural key, count]
      * @param  string|null  $default
+     * @param  array<string, string|int>  $placeholders
+     * @param  array<string, array{string, int|float}>  $plurals  Placeholder name => [plural key, count]
      * @return mixed
      *
      * @throws Exception
@@ -185,20 +185,32 @@ class Locale
      * The translation is an ICU MessageFormat pattern with a `count` argument, for example
      * `{count, plural, one {# minute} other {# minutes}}`.
      *
+     * @param  string  $key
+     * @param  int|float  $count
+     * @param  string|null  $default
+     * @param  array<string, string|int|float>  $arguments  Other ICU arguments of the pattern, written as `{name}`
+     *
      * @throws Exception
      */
-    public function getPlural(string $key, int $count, string|null $default = self::DEFAULT_DYNAMIC_KEY): ?string
+    public function getPlural(string $key, int|float $count, string|null $default = self::DEFAULT_DYNAMIC_KEY, array $arguments = []): ?string
     {
-        return $this->format($this->default, $key, $count) ?? ($default === self::DEFAULT_DYNAMIC_KEY ? '{{'.$key.'}}' : $default);
+        return $this->format($this->default, $key, $count, $arguments) ?? ($default === self::DEFAULT_DYNAMIC_KEY ? '{{'.$key.'}}' : $default);
     }
 
     /**
      * Format a plural translation with the rules of the language that has it, trying the fallback language next
      *
+     * @param  string  $language
+     * @param  string  $key
+     * @param  int|float  $count
+     * @param  array<string, string|int|float>  $arguments
+     *
      * @throws Exception
      */
-    protected function format(string $language, string $key, int $count): ?string
+    protected function format(string $language, string $key, int|float $count, array $arguments = []): ?string
     {
+        $invalid = null;
+
         foreach (\array_unique(\array_filter([$language, $this->fallback])) as $name) {
             $pattern = self::$language[$name][$key] ?? null;
 
@@ -207,8 +219,10 @@ class Locale
             }
 
             try {
-                $text = (new \MessageFormatter(self::$rules[$name] ?? $name, $pattern))->format(['count' => $count]);
-            } catch (\IntlException) {
+                $text = (new \MessageFormatter(self::$rules[$name] ?? $name, $pattern))->format(['count' => $count] + $arguments);
+            } catch (\IntlException $exception) {
+                $invalid ??= 'Key named "'.$key.'" in "'.$name.'" is not a valid plural pattern: '.$exception->getMessage();
+
                 continue;
             }
 
@@ -218,7 +232,7 @@ class Locale
         }
 
         if (self::$exceptions) {
-            throw new Exception('Key named "'.$key.'" not found');
+            throw new Exception($invalid ?? 'Key named "'.$key.'" not found');
         }
 
         return null;

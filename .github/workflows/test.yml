@@ -16,5 +16,5 @@ jobs:
             - name: Run Tests
               run: |
                 docker run --rm --interactive -v $PWD:/app composer sh -c \
-                "composer install --profile --ignore-platform-reqs && composer test"
+                "install-php-extensions intl && composer install --profile --ignore-platform-reqs && composer test"
               
